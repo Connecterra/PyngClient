@@ -60,7 +60,7 @@ fi
 # Check if the build passes
 pipenv run twine check dist/*
 if [[ "${?}" -ne 0 ]]; then
-  echo 'Build check failed. Deplotment aborted.'
+  echo 'Build check failed. Deployment aborted.'
   exit 1
 fi
 

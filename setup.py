@@ -1,11 +1,11 @@
 from setuptools import setup, find_packages
 
-package_name = "logquicky"
+package_name = "ctra-ping-client"
 
 with open("README.md", "r") as readme_file:
     readme = readme_file.read()
 
-requirements = []
+requirements = ["requests", "isodate"]
 
 setup(
     name=package_name,

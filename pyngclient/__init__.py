@@ -1,0 +1,1 @@
+from pyngclient.generic_ping_client import GenericPingClient

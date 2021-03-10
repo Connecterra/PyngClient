@@ -5,12 +5,11 @@ verify_ssl = true
 
 [dev-packages]
 black = "*"
-pylint = "*"
+twine = "*"
 
 [packages]
 requests = "*"
 isodate = "*"
-pip = "*"
 
 [requires]
 python_version = "3.8"

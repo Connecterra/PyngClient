@@ -1,2 +1,5 @@
-.env
-.vscode
+**/.env
+**/.venv/
+**/.vscode
+
+!**/.vscode/settings.json
