@@ -23,11 +23,12 @@ class GenericPingClient:
         self.username = username if username else os.environ.get("authUsername", None)
         self.password = password if password else os.environ.get("authPassword", None)
 
-        if self.username and self.password:
-            self.authenticate()
-
+        # Set header assuming the token was passed in directly
         self.access_token = token
         self.headers = {"Authorization": f"Bearer {self.access_token}"}
+
+        if self.username and self.password:
+            self.authenticate()
 
     def authenticate(self) -> bool:
         auth = {
@@ -41,15 +42,24 @@ class GenericPingClient:
         response_body = json.loads(r.text)
 
         self.expiration_epoch = int(time()) + parse_duration("PT24H")
-        self.access_token = response_body.get("access_token")
-        self.headers["Authorization"] = f"Bearer {self.access_token}"
+        access_token = response_body.get("access_token")
+        self.headers["Authorization"] = f"Bearer {access_token}"
 
         return True if self.access_token else False
 
     async def authenticate_async(self) -> bool:
         return self.authenticate()
 
-    async def send_ping(
+    async def send_ping_async(
+        self, name, ping_timeout: Union[int, str] = None, run_duration: int = None, override_timeout: bool = False
+    ):
+
+        if int(time()) > self.expiration_epoch:
+            await self.authenticate_async()
+
+        self.send_ping(name, ping_timeout, run_duration, override_timeout)
+
+    def send_ping(
         self,
         name,
         ping_timeout: Union[int, str] = None,
@@ -60,10 +70,9 @@ class GenericPingClient:
 
         """ Ping the monitoring service. Create a new monitor if it does not exist yet. """
 
-        ping_timeout_seconds = self.__parse_ping_timeout(ping_timeout)
+        ping_timeout_seconds = parse_duration(ping_timeout)
 
-        if int(time) > self.expiration_epoch:
-            await self.authenticate_async()
+        logging.info("ping...")
 
         if not monitor:
             # Create a new monitor and get it returned.
@@ -115,7 +124,7 @@ class GenericPingClient:
 
         while True:
             run_duration = int(time()) - start_time
-            await self.send_ping(name, ping_timeout, run_duration, override_timeout=override_timeout)
+            await self.send_ping_async(name, ping_timeout, run_duration, override_timeout=override_timeout)
             await asyncio.sleep(interval)
 
     def __get_generic_ping_monitor(self, name: str = None) -> dict:
@@ -125,15 +134,15 @@ class GenericPingClient:
         monitors_response = json.loads(r.text)
         monitors = monitors_response.get("value")
 
-        monitor = [x for x in monitors if x.get("monitorName") == name]
-        return monitor[0] if len(monitor) > 0 else None
+        monitors = [x for x in monitors if x.get("monitorName") == name]
+        return monitors[0] if len(monitors) > 0 else None
 
     def __create_ping_monitor(self, name: str, ping_timeout_seconds: int = 3600) -> dict:
 
         logging.info(f"Creating a new monitor {name}")
 
         # Ping timeouts should not be shorter than 5 minutes
-        ping_timeout_seconds = max(ping_timeout_seconds, 300)
+        ping_timeout_seconds = max(ping_timeout_seconds, 300) if ping_timeout_seconds != None else 3600
 
         monitor_definition = {
             "monitorName": name,
@@ -148,6 +157,7 @@ class GenericPingClient:
             headers=self.headers,
         )
 
+        logging.debug(f"Create ping request returned: {r.status_code}")
         if not r.ok:
             logging.error(f"Could not create new monitor {monitor_definition.get('monitorName')}")
 

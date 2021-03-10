@@ -71,14 +71,40 @@ client = GenericPingClient(token=auth_token)
 ### Usage in long running application
 
 PyngClient also supports long running applications and async behavior.
-Instead of calling the `send_ping()` command manually in your code, you can at an async task:
+Instead of calling the `send_ping()` command manually in your code, you can at an async task.
+Below is the minimum boilerplate in combination with asyncio. (with added logging, just to see what's going on.)
 
 ```python
+from pyngclient import GenericPingClient
+import asyncio
+import logging
 
 client = GenericPingClient()
+logging.basicConfig(level=logging.INFO)
 
-async def some_method():
 
-  # Does not have to awaited but will just call send_ping() under the hood after every ping_interval.
-  client.run_async("YourMonitorName", ping_interval="PT5M", ping_timeout="PT1H")
+async def main(loop):
+    loop.create_task(client.run_async("testMonitor", "PT5M", "PT1H"))
+
+    while True:
+        logging.info("Running...")
+        await asyncio.sleep(10)
+
+
+if __name__ == "__main__":
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(main(loop))
 ```
+
+## Maintenance
+
+Package is uploaded on PyPI.
+Run the .setup.sh script from an active virtualenvironment after installing the dev dependencies:
+
+```bash
+pipenv install --dev
+pipenv shell
+./setup.sh -t test
+```
+
+Note that the version info as specified in setup.py can only be used once for each upload.

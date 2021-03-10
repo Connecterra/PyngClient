@@ -3,7 +3,7 @@
 # Script to build a python package and upload it to PyPi.org
 #
 
-TEST_URL=https://test.pypi.org/legacy/
+TEST_URL='https://test.pypi.org/legacy/'
 
 show_usage () {
     echo "Usage: ${0} [-t] TARGET " >&2
@@ -30,12 +30,13 @@ done
 shift "$(( OPTIND -1 ))"
 
 TARGET=${@}
+
 case ${TARGET} in
 "prod")
   TARGET_REPO=""
   ;;
 "test")
-  TARGET_REPO=${--repository-url TEST_URL}
+  TARGET_REPO="--repository-url ${TEST_URL}"
   ;;
 *)
   show_usage
@@ -60,7 +61,7 @@ fi
 # Check if the build passes
 pipenv run twine check dist/*
 if [[ "${?}" -ne 0 ]]; then
-  echo 'Build check failed. Deployment aborted.'
+  echo 'Build check failed. Deplotment aborted.'
   exit 1
 fi
 

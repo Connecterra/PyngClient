@@ -9,13 +9,13 @@ requirements = ["requests", "isodate"]
 
 setup(
     name=package_name,
-    packages=[package_name],
+    packages=["pyngclient"],
     version="0.0.1",
     license="GPLv3",
     description="Connecterra GenericPing Client",
     long_description=readme,
     long_description_content_type="text/markdown",
-    author="Connecterra (Igor Schouten)",
+    author="Connecterra B.V. (Igor Schouten)",
     author_email="igors@connecterra.io",
     url="https://github.com/Connecterra/PyngClient",
     keywords=["Connecterra"],
