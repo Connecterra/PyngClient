@@ -14,6 +14,11 @@ PyngClient can be used to periodically send a ping to the GenericPingMonitoringi
 
 ```bash
 pip install pyngclient
+
+# Directly from our private repo
+pipenv install -e git+ssh://git@github.com/Connecterra/PyngClient.git#egg=pyngclient
+# or with pip
+python -m pip install git+ssh://git@github.com/Connecterra/PyngClient.git#egg=pyngclient
 ```
 
 ### Notes
