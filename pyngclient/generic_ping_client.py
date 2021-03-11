@@ -1,5 +1,6 @@
-import os
+from __future__ import annotations
 from typing import Union
+import os
 import requests
 import json
 import logging
@@ -72,7 +73,7 @@ class GenericPingClient:
 
         ping_timeout_seconds = parse_duration(ping_timeout)
 
-        logging.info("ping...")
+        logging.debug("ping...")
 
         if not monitor:
             # Create a new monitor and get it returned.
@@ -102,7 +103,7 @@ class GenericPingClient:
             headers=self.headers,
         )
 
-        logging.info(f"Sent ping for GenericPingMonitor '{name}'")
+        logging.debug(f"Sent ping for GenericPingMonitor '{name}'")
         return r.ok
 
     async def run_async(

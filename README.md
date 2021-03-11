@@ -13,7 +13,7 @@ PyngClient can be used to periodically send a ping to the GenericPingMonitoringi
 ## Installation
 
 ```bash
-pip install ctra-ping-client
+pip install pyngclient
 ```
 
 ### Notes
@@ -30,8 +30,8 @@ pip install ctra-ping-client
 The most basic example assumes you have odataUrl, authUrl, username and password set as environment variables (for example with a .env file if using pipenv)
 
 ```bash .env
-oDataUrl="https://api.domain.io/odata",
-authUrl="https://auth.domain.io",
+oDataUrl="https://odata.yourdomain.com",
+authUrl="https://auth.yourdomain.com",
 authUsername="",
 authPassword="",
 ```
@@ -104,7 +104,7 @@ Run the .setup.sh script from an active virtualenvironment after installing the 
 ```bash
 pipenv install --dev
 pipenv shell
-./setup.sh -t test
+./deploy.sh -t test
 ```
 
 Note that the version info as specified in setup.py can only be used once for each upload.

@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-package_name = "ctra-ping-client"
+package_name = "pyngclient"
 
 with open("README.md", "r") as readme_file:
     readme = readme_file.read()
@@ -9,16 +9,16 @@ requirements = ["requests", "isodate"]
 
 setup(
     name=package_name,
-    packages=["pyngclient"],
+    packages=[package_name],
     version="0.0.1",
     license="GPLv3",
-    description="Connecterra GenericPing Client",
+    description="PyngClient to MonitoringService",
     long_description=readme,
     long_description_content_type="text/markdown",
     author="Connecterra B.V. (Igor Schouten)",
     author_email="igors@connecterra.io",
     url="https://github.com/Connecterra/PyngClient",
-    keywords=["Connecterra"],
+    keywords=["Monitoring"],
     install_requires=requirements,
     include_package_data=True,
     classifiers=[
