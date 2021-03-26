@@ -2,7 +2,7 @@
 
 ## About
 
-PyngClient can be used to periodically send a ping to the GenericPingMonitoringing service.
+PyngClient can be used to periodically send a ping to the GenericPingMonitoring service.
 
 ## Features
 
