@@ -10,7 +10,11 @@ requirements = ["requests", "isodate"]
 setup(
     name=package_name,
     packages=[package_name],
-    version="0.0.1",
+    setup_requires=["setuptools-git-versioning"],
+    version_config={
+        "starting_version": "0.0.2",
+        "dirty_template": "{tag}",
+    },
     license="GPLv3",
     description="PyngClient to MonitoringService",
     long_description=readme,
