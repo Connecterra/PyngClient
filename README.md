@@ -103,13 +103,5 @@ if __name__ == "__main__":
 
 ## Maintenance
 
-Package is uploaded on PyPI.
-Run the .setup.sh script from an active virtualenvironment after installing the dev dependencies:
-
-```bash
-pipenv install --dev
-pipenv shell
-./deploy.sh -t test
-```
-
-Note that the version info as specified in setup.py can only be used once for each upload.
+Package is uploaded on PyPI when pushing a new tag to github.
+The version tag should be a valid semantic version tag without pre or suffixes, such as "0.0.1".
