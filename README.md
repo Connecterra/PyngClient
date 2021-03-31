@@ -59,6 +59,11 @@ client.send_ping("YourMonitorName, "PT1H")
 client.send_ping("YourMonitorName, "PT1H", override_timeout=True)
 ```
 
+### Disabling pings in local environment
+
+You can integrate a pyngclient in your code but make all its operations a no-op by setting envvar `pingServiceDisabled` to `True`.
+This might be useful for local development.
+
 ### Instantiation behavior
 
 In additiona to environment variables, it is possible to initialize the GenericPingClient variables instead.

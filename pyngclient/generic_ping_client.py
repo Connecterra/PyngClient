@@ -8,6 +8,8 @@ from time import time
 import isodate
 import asyncio
 
+PING_SERVICE_DISABLED = os.environ.get("pingServiceDisabled", False)
+
 
 class GenericPingClient:
     def __init__(
@@ -32,6 +34,11 @@ class GenericPingClient:
             self.authenticate()
 
     def authenticate(self) -> bool:
+
+        if PING_SERVICE_DISABLED:
+            logging.warn("Ping service is disabled. Not actually authenticating.")
+            return True
+
         auth = {
             "username": self.username,
             "password": self.password,
@@ -46,7 +53,10 @@ class GenericPingClient:
         access_token = response_body.get("access_token")
         self.headers["Authorization"] = f"Bearer {access_token}"
 
-        return True if self.access_token else False
+        if access_token == None:
+            raise AuthenticationError(f"Could not login to {self.authUrl} with given username and password.")
+
+        return True if access_token else False
 
     async def authenticate_async(self) -> bool:
         return self.authenticate()
@@ -54,6 +64,9 @@ class GenericPingClient:
     async def send_ping_async(
         self, name, ping_timeout: Union[int, str] = None, run_duration: int = None, override_timeout: bool = False
     ):
+
+        if PING_SERVICE_DISABLED:
+            return
 
         if int(time()) > self.expiration_epoch:
             await self.authenticate_async()
@@ -67,6 +80,11 @@ class GenericPingClient:
         run_duration: int = None,
         override_timeout: bool = False,
     ) -> bool:
+
+        if PING_SERVICE_DISABLED:
+            logging.warn("Ping service is disabled. Not actually sending pings.")
+            return True
+
         monitor = self.__get_generic_ping_monitor(name)
 
         """ Ping the monitoring service. Create a new monitor if it does not exist yet. """
@@ -175,3 +193,8 @@ def parse_duration(interval: Union[str, int]) -> int:
     except Exception:
         return None
     return duration_seconds
+
+
+class AuthenticationError(Exception):
+    def __init__(self):
+        pass
